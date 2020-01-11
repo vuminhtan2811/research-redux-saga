@@ -3,57 +3,88 @@ import { withStyles } from "@material-ui/core/styles"
 import Button from "@material-ui/core/Button"
 import AddICon from "@material-ui/icons/Add"
 import Grid from "@material-ui/core/Grid"
-import styles from "./styles"
+import Container from "@material-ui/core/Container"
 import { STATUES } from "../../constants"
 import TaskList from "../../components/TaskList"
+import TaskForm from "../../components/TaskForm"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import { fetchListTaskRequest } from "../../store/actions/task.action"
+import Loading from "../../commons/loading"
 
-const listTask = [
-  {
-    id: 1,
-    title: "Read book",
-    description: "Read matterial ui book",
-    status: 0
-  },
-  {
-    id: 2,
-    title: "Play football",
-    description: "With my friend",
-    status: 1
-  },
-  {
-    id: 1,
-    title: "Go to coffee shop",
-    description: "With my wife",
-    status: 2
-  }
-]
+import styles from "./styles"
+
 class TaskBoard extends Component {
+  state = {
+    open: false
+  }
+
+  onClose = () => {
+    this.setState({
+      open: !this.state.open
+    })
+  }
+
   renderBoard() {
     let xhtml = null
+    const { task } = this.props
     xhtml = (
       <Grid container spacing={2}>
         {STATUES.map(status => {
-          const taskFiltered = listTask.filter(
-            task => task.status === status.value
+          const taskFiltered = task.listTask
+            ? task.listTask.filter(task => task.status === status.value)
+            : []
+          return (
+            <TaskList
+              taskFiltered={taskFiltered}
+              status={status}
+              key={status.value}
+            />
           )
-          return <TaskList taskFiltered={taskFiltered} status={status} />
         })}
       </Grid>
     )
     return xhtml
   }
 
+  renderForm() {
+    let xhtml = null
+    xhtml = <TaskForm open={this.state.open} onClose={this.onClose} />
+    return xhtml
+  }
+
+  componentDidMount() {
+    this.props.fetchListTaskRequest()
+  }
+
   render() {
-    const { classes } = this.props
+    const { classes, task } = this.props
     return (
       <div className={classes.taskboard}>
-        <Button variant="contained" color="primary">
-          <AddICon />
-          Add New Task
-        </Button>
-        {this.renderBoard()}
+        <Container>
+          <Button variant="contained" color="primary" onClick={this.onClose}>
+            <AddICon />
+            Add New Task
+          </Button>
+          {this.renderBoard()}
+        </Container>
+        {task.loading ? <Loading /> : null}
+        {this.renderForm()}
       </div>
     )
   }
 }
-export default withStyles(styles)(TaskBoard)
+
+function mapStateToProps(state) {
+  return {
+    task: state.task
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ fetchListTaskRequest }, dispatch)
+}
+
+export default withStyles(styles)(
+  connect(mapStateToProps, mapDispatchToProps)(TaskBoard)
+)

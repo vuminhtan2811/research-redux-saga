@@ -9,13 +9,13 @@ class TaskList extends Component {
     const { taskFiltered, status } = this.props
 
     return (
-      <Grid item md={4} xs={12} key={status.value}>
+      <Grid item md={4} sm={6} xs={12} key={status.value}>
         <Box mt={1} mb={2}>
           <div className={status.status}>{status.label}</div>
         </Box>
         <div className={status.wrapperListTask}>
-          {taskFiltered.map(task => {
-            return <TaskItem task={task} status={status}/>
+          {taskFiltered.map((task, index) => {
+            return <TaskItem task={task} status={status} key={index} />
           })}
         </div>
       </Grid>

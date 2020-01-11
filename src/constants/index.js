@@ -1,3 +1,4 @@
+export const ENDPOINT = "http://localhost:4000"
 export const STATUES = [
   {
     value: 0,
@@ -11,4 +12,4 @@ export const STATUES = [
     value: 2,
     label: "COMPLETED"
   }
-];
+]
