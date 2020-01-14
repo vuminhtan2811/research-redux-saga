@@ -2,7 +2,8 @@ const styles = theme => ({
   taskboard: {
     display: "flex",
     alignItems: "center",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    paddingTop: 15
   },
   shape: {
     width: "100px",

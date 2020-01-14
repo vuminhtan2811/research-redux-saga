@@ -7,10 +7,10 @@ import Container from "@material-ui/core/Container"
 import { STATUES } from "../../constants"
 import TaskList from "../../components/TaskList"
 import TaskForm from "../../components/TaskForm"
+import FormFilter from "../../components/FormFilter"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import { fetchListTaskRequest } from "../../store/actions/task.action"
-import Loading from "../../commons/loading"
+import { fetchListTask, filterTask } from "../../store/actions/task.action"
 
 import styles from "./styles"
 
@@ -53,12 +53,25 @@ class TaskBoard extends Component {
     return xhtml
   }
 
+  handleTaskFilter(e) {
+    const { value } = e.target
+    console.log(value)
+
+    this.props.filterTask(value)
+  }
+
+  renderFormFilter() {
+    let xhtml = null
+    xhtml = <FormFilter handleChange={this.handleTaskFilter} />
+    return xhtml
+  }
+
   componentDidMount() {
-    this.props.fetchListTaskRequest()
+    this.props.fetchListTask()
   }
 
   render() {
-    const { classes, task } = this.props
+    const { classes } = this.props
     return (
       <div className={classes.taskboard}>
         <Container>
@@ -66,9 +79,9 @@ class TaskBoard extends Component {
             <AddICon />
             Add New Task
           </Button>
+          {this.renderFormFilter()}
           {this.renderBoard()}
         </Container>
-        {task.loading ? <Loading /> : null}
         {this.renderForm()}
       </div>
     )
@@ -82,7 +95,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchListTaskRequest }, dispatch)
+  return bindActionCreators({ fetchListTask, filterTask }, dispatch)
 }
 
 export default withStyles(styles)(
