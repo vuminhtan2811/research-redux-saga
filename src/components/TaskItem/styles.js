@@ -1,4 +1,7 @@
 export const styles = {
+  taskItem: {
+    marginBottom: 20
+  },
   label: {
     textAlign: "right"
   },

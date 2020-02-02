@@ -7,15 +7,21 @@ import Typography from "@material-ui/core/Typography"
 import Fab from "@material-ui/core/Fab"
 import Grid from "@material-ui/core/Grid"
 import Box from "@material-ui/core/Box"
-import Icon from '@material-ui/core/Icon';
+import Icon from "@material-ui/core/Icon"
 
 import { styles } from "./styles"
 
 class TaskItem extends Component {
   render() {
-    const { task, status, classes } = this.props
+    const {
+      task,
+      status,
+      classes,
+      onClickEditing,
+      onClickDeleting
+    } = this.props
     return (
-      <Card key={task.id}>
+      <Card key={task.id} className={classes.taskItem}>
         <CardContent>
           <Grid container justify="space-between">
             <Grid item md={8}>
@@ -31,11 +37,11 @@ class TaskItem extends Component {
           </Grid>
         </CardContent>
         <CardActions className={classes.fabWrapper}>
-          <Fab size="small"  color="primary">
-          <Icon>edit_icon</Icon>
+          <Fab size="small" color="primary" onClick={onClickEditing}>
+            <Icon>edit_icon</Icon>
           </Fab>
-          <Fab size="small"  color="secondary">
-          <Icon>delete_icon</Icon>
+          <Fab size="small" color="secondary" onClick={onClickDeleting}>
+            <Icon>delete_icon</Icon>
           </Fab>
         </CardActions>
       </Card>

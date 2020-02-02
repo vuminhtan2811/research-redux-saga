@@ -8,23 +8,26 @@ import { STATUES } from "../../constants"
 import TaskList from "../../components/TaskList"
 import TaskForm from "../../components/TaskForm"
 import FormFilter from "../../components/FormFilter"
+import DeleteTaskComponent from "../../components/ConfirmDeleteTask"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import { fetchListTask, filterTask } from "../../store/actions/task.action"
-
+import {
+  fetchListTask,
+  filterTask,
+  addTask,
+  setTaskEditing,
+  deleteTask,
+  updateTask
+} from "../../store/actions/task.action"
+import {
+  showModal,
+  hideModal,
+  changeModalTitle,
+  changeModalContent
+} from "../../store/actions/modal.action"
 import styles from "./styles"
 
 class TaskBoard extends Component {
-  state = {
-    open: false
-  }
-
-  onClose = () => {
-    this.setState({
-      open: !this.state.open
-    })
-  }
-
   renderBoard() {
     let xhtml = null
     const { task } = this.props
@@ -39,6 +42,8 @@ class TaskBoard extends Component {
               taskFiltered={taskFiltered}
               status={status}
               key={status.value}
+              onClickEditing={this.handleEditing}
+              onClickDeleting={this.showModalDeleting}
             />
           )
         })}
@@ -47,16 +52,21 @@ class TaskBoard extends Component {
     return xhtml
   }
 
-  renderForm() {
-    let xhtml = null
-    xhtml = <TaskForm open={this.state.open} onClose={this.onClose} />
-    return xhtml
+  handleEditing = task => {
+    const {
+      showModal,
+      changeModalTitle,
+      changeModalContent,
+      setTaskEditing
+    } = this.props
+    setTaskEditing(task)
+    showModal()
+    changeModalTitle("Update Task")
+    changeModalContent(<TaskForm handleSubmitForm={this.handleSubmitForm} />)
   }
 
-  handleTaskFilter(e) {
+  handleTaskFilter = e => {
     const { value } = e.target
-    console.log(value)
-
     this.props.filterTask(value)
   }
 
@@ -70,19 +80,76 @@ class TaskBoard extends Component {
     this.props.fetchListTask()
   }
 
+  handleAddTask = () => {
+    const {
+      showModal,
+      changeModalTitle,
+      changeModalContent,
+      setTaskEditing
+    } = this.props
+    setTaskEditing(null)
+    showModal()
+    changeModalTitle("Add New Task")
+    changeModalContent(<TaskForm handleSubmitForm={this.handleSubmitForm} />)
+  }
+
+  handleAddTaskItem = task => {
+    task.status = 0
+    this.props.addTask(task)
+  }
+
+  handleUpdateTaskItem = task => {
+    this.props.updateTask(task)
+  }
+
+  handleSubmitForm = data => {
+    const { task } = this.props
+    if (task.taskEditing === null) {
+      this.handleAddTaskItem(data)
+    } else {
+      this.handleUpdateTaskItem(data)
+    }
+  }
+
+  showModalDeleting = task => {
+    const {
+      showModal,
+      changeModalTitle,
+      changeModalContent,
+      hideModal
+    } = this.props
+    showModal()
+    changeModalTitle("Delete Task")
+    changeModalContent(
+      <DeleteTaskComponent
+        title={task.title}
+        handleConfirmedDelete={() => this.handleConfirmedDelete(task)}
+        hideModal={hideModal}
+      />
+    )
+  }
+
+  handleConfirmedDelete = value => {
+    const { deleteTask } = this.props
+    deleteTask(value)
+  }
+
   render() {
     const { classes } = this.props
     return (
       <div className={classes.taskboard}>
         <Container>
-          <Button variant="contained" color="primary" onClick={this.onClose}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.handleAddTask}
+          >
             <AddICon />
             Add New Task
           </Button>
           {this.renderFormFilter()}
           {this.renderBoard()}
         </Container>
-        {this.renderForm()}
       </div>
     )
   }
@@ -95,7 +162,21 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchListTask, filterTask }, dispatch)
+  return bindActionCreators(
+    {
+      fetchListTask,
+      filterTask,
+      addTask,
+      showModal,
+      hideModal,
+      changeModalTitle,
+      changeModalContent,
+      setTaskEditing,
+      deleteTask,
+      updateTask
+    },
+    dispatch
+  )
 }
 
 export default withStyles(styles)(

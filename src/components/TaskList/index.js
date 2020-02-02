@@ -6,8 +6,7 @@ import { styles } from "./styles"
 import TaskItem from "../TaskItem"
 class TaskList extends Component {
   render() {
-    const { taskFiltered, status } = this.props
-
+    const { taskFiltered, status, onClickEditing, onClickDeleting } = this.props
     return (
       <Grid item md={4} sm={6} xs={12} key={status.value}>
         <Box mt={1} mb={2}>
@@ -15,7 +14,15 @@ class TaskList extends Component {
         </Box>
         <div className={status.wrapperListTask}>
           {taskFiltered.map((task, index) => {
-            return <TaskItem task={task} status={status} key={index} />
+            return (
+              <TaskItem
+                task={task}
+                status={status}
+                key={index}
+                onClickEditing={() => onClickEditing(task)}
+                onClickDeleting={() => onClickDeleting(task)}
+              />
+            )
           })}
         </div>
       </Grid>

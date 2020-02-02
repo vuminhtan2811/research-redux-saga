@@ -8,7 +8,7 @@ export const styles = {
     height: "100%",
     width: "100%",
     background: "#000000bf",
-    zIndex: 999
+    zIndex: 99999
   },
   icon: {
     width: 50,

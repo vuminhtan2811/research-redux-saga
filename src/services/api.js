@@ -20,6 +20,18 @@ class api {
   get(url) {
     return this.instance.get(url)
   }
+
+  post(url, data) {
+    return this.instance.post(url, data)
+  }
+
+  delete(url, id) {
+    return this.instance.delete(url, id)
+  }
+
+  put(url, data) {
+    return this.instance.put(url, data)
+  }
 }
 
 export default new api()
