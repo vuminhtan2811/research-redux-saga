@@ -3,7 +3,7 @@ import AdminContainer from "../container/Admin"
 
 export const ADMIN_LAYOUT_ROUTES = [
   {
-    path: "",
+    path: "/",
     exact: true,
     name: "Admin",
     component: AdminContainer

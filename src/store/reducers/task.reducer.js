@@ -72,7 +72,6 @@ export default (state = initialState, action) => {
       const { id } = payload.data
       const { listTask } = state
       const index = state.listTask.findIndex(task => task.id === id)
-      console.log(index)
       if (index !== -1) {
         const newListTask = [
           ...listTask.slice(0, index),

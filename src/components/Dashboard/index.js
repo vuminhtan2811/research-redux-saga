@@ -1,15 +1,57 @@
 import React from "react"
 import { withStyles } from "@material-ui/core/styles"
-import { styles } from "./styles"
-import Header from "./Header"
 import SideDrawer from "./SideDrawer"
-function DashBoardComponent({ classes, children }) {
+import { connect } from "react-redux"
+import { bindActionCreators, compose } from "redux"
+import Header from "./Header"
+import { styles } from "./styles"
+import {
+  hideSidebarDrawer,
+  showSidebarDrawer
+} from "../../store/actions/ui.action"
+import cn from "classnames"
+
+function DashBoardComponent({
+  classes,
+  children,
+  pageName,
+  showSidebar,
+  hideSidebarDrawer,
+  showSidebarDrawer
+}) {
+  const toggleSidebar = () => {
+    if (showSidebar) {
+      hideSidebarDrawer()
+    } else {
+      showSidebarDrawer()
+    }
+  }
   return (
-    <div className={classes.dashboardWrappe}>
-      <Header />
-      <SideDrawer />
-      {children}
+    <div className={classes.dashboardWrapper}>
+      <Header pageName={pageName} toggleSidebar={toggleSidebar} />
+      <div className={classes.main}>
+        <SideDrawer showSidebar={showSidebar} />
+        <div
+          className={cn(classes.wrapperContent, {
+            [classes.shiftLeft]: showSidebar === true
+          })}
+        >
+          {children}
+        </div>
+      </div>
     </div>
   )
 }
-export default withStyles(styles)(DashBoardComponent)
+
+function mapStateToProps(state) {
+  return {
+    showSidebar: state.ui.showSidebar
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ hideSidebarDrawer, showSidebarDrawer }, dispatch)
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+export default compose(withConnect, withStyles(styles))(DashBoardComponent)

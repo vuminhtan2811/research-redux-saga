@@ -5,7 +5,8 @@ const theme = createMuiTheme({
     primary: "#D32F2F",
     secondary: "#00BCD4",
     error: "#E64A19",
-    white: "#FFFFFF"
+    white: "#FFFFFF",
+    gray: "#eceff1"
   },
   typography: {
     fontFamily: "Roboto"
@@ -15,8 +16,10 @@ const theme = createMuiTheme({
     background: "#7B1FA2",
     textColor: "#FFFFFF",
     border: "#CCCCCC"
+  },
+  text: {
+    defaultTextColor: "#000000"
   }
 })
 
-
-export default theme 
+export default theme

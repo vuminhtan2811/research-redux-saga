@@ -1,4 +1,9 @@
-import { HIDE_LOADING, SHOW_LOADING } from "../types/ui.type"
+import {
+  HIDE_LOADING,
+  SHOW_LOADING,
+  HIDE_SIDEBAR,
+  SHOW_SIDEBAR
+} from "../types/ui.type"
 
 export function showGlobalLoading() {
   return {
@@ -9,5 +14,17 @@ export function showGlobalLoading() {
 export function hideGlobalLoading() {
   return {
     type: HIDE_LOADING
+  }
+}
+
+export function showSidebarDrawer() {
+  return {
+    type: SHOW_SIDEBAR
+  }
+}
+
+export function hideSidebarDrawer() {
+  return {
+    type: HIDE_SIDEBAR
   }
 }
